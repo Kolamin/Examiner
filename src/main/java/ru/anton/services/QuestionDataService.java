@@ -3,29 +3,30 @@ package ru.anton.services;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
+import ru.anton.models.Question;
 
 import javax.annotation.PostConstruct;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class QuestionDataService {
 
-    public Map<String, String[]> getDataMap() {
-        return dataMap;
-    }
+    private static int QUESTION_COUNT;
 
-    private Map<String, String[]> dataMap = new TreeMap<>();
+    List<Question> allQuestion = new ArrayList<>();
+
+    public List<Question> getAllQuestion() {
+        return allQuestion;
+    }
 
     @PostConstruct
     public void fetchQuestionData() throws IOException {
 
-        Map<String, String[]> newDataMap = new TreeMap<>();
+        List<Question> newQuestion = new ArrayList<>();
 
         Reader reader = new FileReader("./data/Thermal_power_plants.csv");
 
@@ -38,8 +39,6 @@ public class QuestionDataService {
                     .append("\n");
         }
 
-
-        AtomicInteger numberOfQuestion = new AtomicInteger(1);
         String[] split = columnOne.toString()
                 .split("Вопрос \\d+");
 
@@ -47,21 +46,26 @@ public class QuestionDataService {
 
         for (String s : result) {
             String[] strings = s.split("\\n");
-            newDataMap.put(strings[1], Arrays.copyOfRange(strings, 2, strings.length));
+            Question question = new Question();
+            question.setId(++QUESTION_COUNT);
+            question.setQuestion(strings[1]);
+            question.setTestOptions( Arrays.copyOfRange(strings, 2, strings.length));
+
+            newQuestion.add(question);
         }
 
 
-        newDataMap.forEach((k, v) -> {
+        for (Question question : newQuestion) {
             System.out.println("================");
-            System.out.println("Вопрос " + numberOfQuestion.getAndIncrement());
-            System.out.println(k);
-            for (String s : v) {
-                System.out.println("  * " + s);
+            System.out.println("Вопрос " + question.getId());
+            System.out.println(question.getQuestion());
+            String[] testOptions = question.getTestOptions();
+            for (String testOption : testOptions) {
+                System.out.println("  *"+testOption);
             }
+        }
 
-        });
-
-        this.dataMap = newDataMap;
+        this.allQuestion = newQuestion;
     }
 }
 
