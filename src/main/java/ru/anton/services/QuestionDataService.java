@@ -1,16 +1,16 @@
 package ru.anton.services;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 import ru.anton.models.Question;
 
 import javax.annotation.PostConstruct;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class QuestionDataService {
@@ -28,18 +28,17 @@ public class QuestionDataService {
 
         List<Question> newQuestion = new ArrayList<>();
 
-        Reader reader = new FileReader("./data/Thermal_power_plants.csv");
+        File file = new File("./data/Thermal_power_plants.txt");
 
-        Iterable<CSVRecord> records = CSVFormat.EXCEL.withFirstRecordAsHeader()
-                .parse(reader);
+        BufferedReader br = new BufferedReader(new FileReader(file));
 
-        StringBuilder columnOne = new StringBuilder();
-        for (CSVRecord record : records) {
-            columnOne.append(record.get(0))
-                    .append("\n");
+        StringBuilder fileContent = new StringBuilder();
+        String st;
+        while ((st = br.readLine()) != null) {
+            fileContent.append(st).append("\n");
         }
 
-        String[] split = columnOne.toString()
+        String[] split = fileContent.toString()
                 .split("Вопрос \\d+");
 
         String[] result = Arrays.copyOfRange(split, 1, split.length);
