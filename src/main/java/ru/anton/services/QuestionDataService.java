@@ -6,8 +6,11 @@ import ru.anton.models.Question;
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +21,9 @@ public class QuestionDataService {
 
     private static int QUESTION_COUNT;
 
+    private static final String QUESTION_URL = "https://raw.githubusercontent.com/Kolamin/Questions/main/Thermal_power_plants.txt";
+
+
     List<Question> allQuestion = new ArrayList<>();
 
     public List<Question> getAllQuestion() {
@@ -27,19 +33,22 @@ public class QuestionDataService {
 
 
     @PostConstruct
-    public void fetchQuestionData() throws IOException {
+    public void fetchQuestionData() throws IOException, InterruptedException {
 
         List<Question> newQuestion = new ArrayList<>();
 
-        QuestionDataService obj = new QuestionDataService();
 
-        InputStream inputStream = obj.getClass()
-                .getClassLoader()
-                .getResourceAsStream("./data/Thermal_power_plants.txt");
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(QUESTION_URL))
+                .build();
+        HttpResponse<String> httpResponse =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
 
+        StringReader stringReader = new StringReader(httpResponse.body());
 
         StringBuilder fileContent;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (BufferedReader br = new BufferedReader(stringReader)) {
 
 
             fileContent = new StringBuilder();
