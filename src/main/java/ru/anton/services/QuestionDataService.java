@@ -32,6 +32,12 @@ public class QuestionDataService {
         return allQuestion;
     }
 
+    public Question showSingleQuestion(int id){
+        return allQuestion.stream()
+                .filter(question -> question.getId() == id).findAny()
+                .orElse(null);
+    }
+
 
 
     @PostConstruct
@@ -84,7 +90,6 @@ public class QuestionDataService {
 
         this.allQuestion = newQuestion;
 
-        stringReader.close();
     }
 }
 
