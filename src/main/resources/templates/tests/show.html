@@ -6,7 +6,10 @@
 </head>
 <body>
 <div>
-    <h3 align="center">Вопрос</h3>
+
+    <header>
+        <h1 align="center" th:text="'Вопрос ' + ${question.getId()}"></h1>
+    </header>
     <h3 th:text="${question.getQuestion()}"></h3>
     <ul th:each="test : ${question.getTestOptions()}">
         <li th:text="${test}"></li>
