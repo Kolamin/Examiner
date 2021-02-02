@@ -6,6 +6,7 @@ import ru.anton.models.Question;
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -14,6 +15,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -45,7 +47,7 @@ public class QuestionDataService {
         HttpResponse<String> httpResponse =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        StringReader stringReader = new StringReader(httpResponse.body());
+        Reader stringReader = new StringReader(httpResponse.body());
 
         StringBuilder fileContent;
         try (BufferedReader br = new BufferedReader(stringReader)) {
@@ -54,6 +56,10 @@ public class QuestionDataService {
             fileContent = new StringBuilder();
             String st;
             while ((st = br.readLine()) != null) {
+                if(st.contains("Правила по охране труда при эксплуатации тепловых энергоустановок"))
+                    continue;
+                if (st.contains("Мероприятия по оказани первой помощи (Приказ Минздрава России от 04.05.2012 № 477н)"))
+                    continue;
                 fileContent.append(st)
                         .append("\n");
             }
@@ -64,17 +70,21 @@ public class QuestionDataService {
 
         String[] result = Arrays.copyOfRange(split, 1, split.length);
 
+
         for (String s : result) {
             String[] strings = s.split("\\n");
             Question question = new Question();
             question.setId(++QUESTION_COUNT);
             question.setQuestion(strings[1]);
+
             question.setTestOptions(Arrays.copyOfRange(strings, 2, strings.length));
 
             newQuestion.add(question);
         }
 
         this.allQuestion = newQuestion;
+
+        stringReader.close();
     }
 }
 
