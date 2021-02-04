@@ -1,23 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <title>Home</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Begin</title>
 </head>
 <body>
-
-<header>
-    <h1 align="center">Вопросы</h1>
-</header>
-
-
-<div th:each="question : ${allQuestions}">
-    <h3 th:text="${question.getId()} + ') ' + ${question.getQuestion()}"></h3>
-    <div th:each="tests: ${question.getTestOptions()}">
-        <ul th:each="test:${tests}">
-            <li th:text="${test}"></li>
-        </ul>
-    </div>
+<h1 id="h1">Правила технической эксплуатации тепловых энергоустановок</h1>
+<div align="center">
+    <a  th:href="@{tests/1}">Начать тест</a>
 </div>
 </body>
 </html>
