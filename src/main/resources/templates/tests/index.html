@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
     <title>Question</title>
 </head>
 <body>
@@ -12,12 +13,15 @@
     </header>
     <h3 th:text="${question.getQuestion()}"></h3>
     <ul th:each="test : ${question.getTestOptions()}">
-        <li th:text="${test}"></li>
+        <li id="li">
+            <input type="radio" th:value="${test}" th:name="testOptions" th:text="${test}">
+        </li>
     </ul>
 
     <form th:method="GET" th:action="@{/tests/{id}(id=${question.getId() + 1})}" th:object="${question}">
         <input type="submit" value="Следующий вопрос">
     </form>
+
     <div align="center">
         <a th:href="@{/tests}">Вернутся на главную страницу</a>
     </div>
