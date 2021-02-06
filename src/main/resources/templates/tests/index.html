@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
     <title>Question</title>
 </head>
 <body>
@@ -11,16 +11,24 @@
     <header>
         <h1 id="h1" th:text="'Вопрос ' + ${question.getId()}"></h1>
     </header>
-    <h3 th:text="${question.getQuestion()}"></h3>
-    <ul th:each="test : ${question.getTestOptions()}">
-        <li id="li">
-            <input type="radio" th:value="${test}" th:name="testOptions" th:text="${test}">
-        </li>
-    </ul>
+
 
     <form th:method="GET" th:action="@{/tests/{id}(id=${question.getId() + 1})}" th:object="${question}">
-        <input type="submit" value="Следующий вопрос">
+        <h3 th:text="${question.getQuestion()}"></h3>
+        <ul>
+            <li id="li" th:each="test : ${question.getTestOptions()}">
+                <input type="radio" th:field="${question.answer}" th:value="${test}" th:name="testOptions"  onclick="document.getElementById('push').disabled = false">
+                <label th:text="${test}"></label>
+            </li>
+        </ul>
+        <input th:id="push" type="submit" value="Ответить" disabled>
     </form>
+
+    <div>
+        <form id="stop" th:action="@{/tests/answer}" method="get">
+            <input type="submit" value="Прервать">
+        </form>
+    </div>
 
     <div align="center">
         <a th:href="@{/tests}">Вернутся на главную страницу</a>

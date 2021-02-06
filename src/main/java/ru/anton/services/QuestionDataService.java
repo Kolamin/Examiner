@@ -15,7 +15,6 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -28,18 +27,28 @@ public class QuestionDataService {
 
     List<Question> allQuestion = new ArrayList<>();
 
+    //Вернуть все вопросы
     public List<Question> getAllQuestion() {
         return allQuestion;
     }
 
+
+    //Вернуть вопрос по id
     public Question showSingleQuestion(int id){
         return allQuestion.stream()
                 .filter(question -> question.getId() == id).findAny()
                 .orElse(null);
     }
 
+    public List<Question> clearFieldAnswer(List<Question> questions){
+        for (Question question : questions) {
+            question.setAnswer(null);
+        }
+        return questions;
+    }
 
 
+    //Инициализация коллекции
     @PostConstruct
     public void fetchQuestionData() throws IOException, InterruptedException {
 
