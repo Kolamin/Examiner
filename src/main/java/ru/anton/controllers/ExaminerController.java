@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.anton.models.Question;
 import ru.anton.services.QuestionDataService;
 
 @Controller
@@ -16,7 +17,6 @@ public class ExaminerController {
 
     @GetMapping()
     public String home(){
-       questionDataService.clearFieldAnswer(questionDataService.getAllQuestion());
 
         return "/tests/home";
     }
@@ -30,13 +30,14 @@ public class ExaminerController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model){
         model.addAttribute("question", questionDataService.showSingleQuestion(id));
-
+       // model.addAttribute("answer", new Answer());
         return "tests/index";
     }
 
-    @GetMapping("/answer")
-    public String getAnswer(Model mode){
-        mode.addAttribute("answers", questionDataService);
+    @PostMapping("/answer/{id}")
+    public String getAnswer(Model model, @ModelAttribute Question answer, @PathVariable("id") int id){
+        model.addAttribute("answers",  answer);
+        model.addAttribute("id", id);
         return "tests/answer";
     }
 

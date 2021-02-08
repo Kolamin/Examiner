@@ -5,10 +5,10 @@
     <title>Answer Table</title>
 </head>
 <body>
-<ul th:each="question : ${answers.getAllQuestion()}">
-    <tr th:each="answer : ${question.getAnswer()}">
-        <th th:text="${question.getId()} + ' '+ ${question.getQuestion()} +' ' + ' -> ' + ${answer}"></th>
-    </tr>
-</ul>
+
+<form method="get" th:action="@{/tests/{id}(id=${id} + 1)}">
+    <p th:text="'Ответ на вопрос № '+ ${id} + ' - ' + ${answers.getAnswer()}"></p>
+    <input type="submit" value="Следующий вопрос">
+</form>
 </body>
 </html>

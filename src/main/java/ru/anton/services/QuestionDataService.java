@@ -40,13 +40,6 @@ public class QuestionDataService {
                 .orElse(null);
     }
 
-    public List<Question> clearFieldAnswer(List<Question> questions){
-        for (Question question : questions) {
-            question.setAnswer(null);
-        }
-        return questions;
-    }
-
 
     //Инициализация коллекции
     @PostConstruct

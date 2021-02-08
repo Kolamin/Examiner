@@ -12,23 +12,19 @@
         <h1 id="h1" th:text="'Вопрос ' + ${question.getId()}"></h1>
     </header>
 
+    <form th:method="post" th:action="@{/tests/answer/{id}(id=${question.getId()})}" th:object="${question}">
 
-    <form th:method="GET" th:action="@{/tests/{id}(id=${question.getId() + 1})}" th:object="${question}">
-        <h3 th:text="${question.getQuestion()}"></h3>
+        <h3 th:text="*{getQuestion()}"></h3>
         <ul>
-            <li id="li" th:each="test : ${question.getTestOptions()}">
-                <input type="radio" th:field="${question.answer}" th:value="${test}" th:name="testOptions"  onclick="document.getElementById('push').disabled = false">
+            <li id="li" th:each="test : *{getTestOptions()}">
+                <input type="radio" th:field="${question.answer}"   th:value="${test}"  th:name="testOptions"
+                       onclick="document.getElementById('push').disabled = false">
                 <label th:text="${test}"></label>
             </li>
         </ul>
         <input th:id="push" type="submit" value="Ответить" disabled>
     </form>
 
-    <div>
-        <form id="stop" th:action="@{/tests/answer}" method="get">
-            <input type="submit" value="Прервать">
-        </form>
-    </div>
 
     <div align="center">
         <a th:href="@{/tests}">Вернутся на главную страницу</a>
